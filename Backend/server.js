@@ -19,6 +19,8 @@ async function startServer() {
   try {
     await connectDatabase();
 
+    //config cloudinary
+
     const server = app.listen(PORT, () => {
       console.log(`Server is working on http://localhost:${PORT}`);
     });
