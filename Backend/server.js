@@ -1,31 +1,39 @@
+const path = require("path");
+
+// Load environment variables FIRST from the project's config folder
+require("dotenv").config({
+  path: path.join(__dirname, "config", "config.env"),
+});
+
 const app = require("./app");
 const connectDatabase = require("./config/database");
 
-// Handling Uncaught Exception
 process.on("uncaughtException", (err) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`Shutting down the server due to Uncaught Exception`);
+  console.error(`Error: ${err.message}`);
   process.exit(1);
 });
 
-// Config
-if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({ path: "backend/config/config.env" });
+const PORT = process.env.PORT || 5000;
+
+async function startServer() {
+  try {
+    await connectDatabase();
+
+    const server = app.listen(PORT, () => {
+      console.log(`Server is working on http://localhost:${PORT}`);
+    });
+
+    process.on("unhandledRejection", (err) => {
+      console.error(`Unhandled rejection: ${err.message}`);
+
+      server.close(() => {
+        process.exit(1);
+      });
+    });
+  } catch (err) {
+    console.error(`Server startup failed: ${err.message}`);
+    process.exit(1);
+  }
 }
 
-// Connecting to database
-connectDatabase();
-
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Server is working on http://localhost:${process.env.PORT}`);
-});
-
-// Unhandled Promise Rejection
-process.on("unhandledRejection", (err) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`Shutting down the server due to Unhandled Promise Rejection`);
-
-  server.close(() => {
-    process.exit(1);
-  });
-});
+startServer();
