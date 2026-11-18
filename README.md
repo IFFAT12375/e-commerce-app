@@ -13,7 +13,7 @@ Building a complete commerce backend requires connecting authentication, catalog
 
 The API uses MongoDB models for users, products, and orders, JWT cookies for authentication, password hashing, role checks, password reset tokens, and centralized error handling.
 
-**Motivation:** Iffat Sattar built this project to learn the backend of a full e-commerce flow and understand architecture and model design, API creation, and engineering practices.
+**Motivation:** I built this project to learn the backend of a full e-commerce flow and understand architecture and model design, API creation, and engineering practices.
 
 ## Key Features
 
